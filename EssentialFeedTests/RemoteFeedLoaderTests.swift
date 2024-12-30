@@ -5,20 +5,21 @@
 import XCTest
 
 class RemoteFeedLoader{
+    let client: HTTPClient
+    init(client: HTTPClient){
+        self.client = client
+    }
     func load(){
-        //2 move test logic from RFL to HTTPClient
-        HTTPClient.shared.get(from: URL(string: "https://a-url.com")!)
+        // The client instance is injected through constructor
+        client.get(from: URL(string: "https://a-url.com")!)
     }
 }
-
-class HTTPClient{
-    //1 shared instace is a var
-    static var shared = HTTPClient()
-    func get(from url :URL){}
+//abstract class, change to protocol
+protocol HTTPClient{
+    func get(from url :URL)
 }
-//3 move test loginc to a different class
 class HTTPClientSpy: HTTPClient{
-    override func get(from url :URL){
+    func get(from url :URL){
         requestedURL = url
     }
     var requestedURL: URL?
@@ -27,18 +28,15 @@ class HTTPClientSpy: HTTPClient{
 class RemoteFeedLoaderTests: XCTestCase {
 
     func test_init_doesNotRequestDataFromURL(){
-        //swap shared instance with spy subclass for testing
         let client = HTTPClientSpy()
-        HTTPClient.shared = client
-        _ = RemoteFeedLoader()
+        _ = RemoteFeedLoader(client:client)
         //Assert that the request is only made when load is changed.
         XCTAssertNil(client.requestedURL)
     }
     
     func test_init_requestDataFromURL() {
         let client = HTTPClientSpy()
-        HTTPClient.shared = client
-        let sut = RemoteFeedLoader()
+        let sut = RemoteFeedLoader(client: client)
         sut.load()
         XCTAssertNotNil(client.requestedURL)
     }
