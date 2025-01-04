@@ -3,46 +3,35 @@
 //  Created by Andres Sanchez on 29/12/2024.
 
 import XCTest
-
-class RemoteFeedLoader{
-    let client: HTTPClient
-    let url: URL
-    init(url: URL, client: HTTPClient){
-        self.client = client
-        self.url = url
-    }
-    func load(){
-        // The client instance is injected through constructor
-        client.get(from:url)
-    }
-}
-//abstract class, change to protocol
-protocol HTTPClient{
-    func get(from url :URL)
-}
-class HTTPClientSpy: HTTPClient{
-    func get(from url :URL){
-        requestedURL = url
-    }
-    var requestedURL: URL?
-}
-
+import EssentialFeed
 class RemoteFeedLoaderTests: XCTestCase {
 
     func test_init_doesNotRequestDataFromURL(){
-        let url = URL(string: "https://a-url.com")!
-        let client = HTTPClientSpy()
-        _ = RemoteFeedLoader(url:url, client:client)
+        let (_, client) = makeSUT()
         //Assert that the request is only made when load is changed.
         XCTAssertNil(client.requestedURL)
     }
     
     func test_load_requestDataFromURL() {
-        let url = URL(string: "https://a-given-url.com")
-        let client = HTTPClientSpy()
-        let sut = RemoteFeedLoader(url:url!, client: client)
+        let url = URL(string: "https://a-given-url.com")!
+        let (sut, client) = makeSUT(url:url)
         sut.load()
         XCTAssertEqual(client.requestedURL, url)
+    }
+    
+    //MARK: - Helpers
+    
+    private func makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sut: RemoteFeedLoader, client: HTTPClientSpy) {
+        let client = HTTPClientSpy()
+        let sut = RemoteFeedLoader(url: url, client: client)
+        return (sut, client)
+    }
+    private class HTTPClientSpy: HTTPClient {
+        var requestedURL: URL?
+        
+        func get(from url: URL) {
+            requestedURL = url
+        }
     }
 }
 
