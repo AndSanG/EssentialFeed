@@ -11,7 +11,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         //Assert that the request is only made when load is changed.
         XCTAssertTrue(client.requestedURLs.isEmpty)
     }
-    
+    // this test if it was called correctly
     func test_load_requestsDataFromURL() {
         let url = URL(string: "https://a-given-url.com")!
         let (sut, client) = makeSUT(url:url)
@@ -19,6 +19,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         XCTAssertEqual(client.requestedURLs, [url])
     }
     
+    // this test how many times was called
     func test_loadTwice_requestsDataFromURLTwice() {
         let url = URL(string: "https://a-given-url.com")!
         let (sut, client) = makeSUT(url:url)
@@ -37,7 +38,7 @@ class RemoteFeedLoaderTests: XCTestCase {
     }
     private class HTTPClientSpy: HTTPClient {
         var requestedURLs = [URL]()
-    
+        // add to an array to compare count order and value.
         func get(from url: URL) {
             requestedURLs.append(url)
         }
