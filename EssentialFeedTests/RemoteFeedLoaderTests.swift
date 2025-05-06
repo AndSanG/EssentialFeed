@@ -11,6 +11,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         //Assert that the request is only made when load is changed.
         XCTAssertTrue(client.requestedURLs.isEmpty)
     }
+    
     // this test if it was called correctly
     func test_load_requestsDataFromURL() {
         let url = URL(string: "https://a-given-url.com")!
@@ -33,7 +34,11 @@ class RemoteFeedLoaderTests: XCTestCase {
         let (sut, client) = makeSUT()
         
         var capturedErrors = [RemoteFeedLoader.Error]()
-        sut.load{capturedErrors.append($0)}
+        sut.load(completion: {(error: RemoteFeedLoader.Error)->Void in capturedErrors.append(error)})
+        //trailing   //sut.load{error in capturedErrors.append(error)}
+        //longhand   //sut.load{capturedErrors.append($0)}
+        
+        
         
         let clientError = NSError(domain: "Test", code: 0)
         client.complete(with: clientError)
@@ -66,7 +71,11 @@ class RemoteFeedLoaderTests: XCTestCase {
     }
     
     private class HTTPClientSpy: HTTPClient {
+        // messages is an array of tuple (url, completion)
+        // Completion is a closure (Enum) -> Void
         private var messages = [(url:URL, completion:(HTTPClientResult) -> Void)]()
+        
+        // calculated property strip all the urls from messages
         var requestedURLs: [URL]{
             return messages.map { $0.url }
         }
