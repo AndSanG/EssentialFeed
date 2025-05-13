@@ -38,24 +38,24 @@ class RemoteFeedLoaderTests: XCTestCase {
         // the Spy has a mocked error
         clientSpyTD.errorSpy = NSError(domain: "Test", code: 0)
         // create a capturedError of FRL.error
-        var capturedError: RemoteFeedLoader.Error?
+        var capturedError = [RemoteFeedLoader.Error]()
         //this was preparation
         //when load is called delivers a connectivity error (DDD especifications)
         //sutRFL.load{error in capturedError = error}
         //longhand
         sutRFL.load(completionLoad:
                         {(error:RemoteFeedLoader.Error) -> Void in
-                            print("captured error")
+                        print("captured error: ", error)
                             //this is executed in client get
                             //.conectivity is called in load
                             //.connectivity is the argument passed to this closure
                             //assignt the error that was called with completion in load
                             // now is only .connectivity
-                            capturedError = error
+                            capturedError.append(error)
                         })
         
-        print(capturedError!)
-        XCTAssertEqual(capturedError, .connectivity)
+        print(capturedError)
+        XCTAssertEqual(capturedError, [.connectivity])
     }
     //MARK: - Helpers
     // create an instance of sut (RemoteFeedLoader) and a client (HTTPClientSpy)
