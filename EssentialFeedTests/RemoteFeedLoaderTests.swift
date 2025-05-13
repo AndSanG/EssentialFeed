@@ -88,26 +88,28 @@ class RemoteFeedLoaderTests: XCTestCase {
     // Inject a client using Protocols instead of OOP
     private class HTTPClientSpy: HTTPClient {
         // this properties are the captured values of a spy
-        var requestedURLs = [URL]()
         // move from stubbing to capture closures
         // dont have behaviour just acumulate properties
-        var completionsGet = [(Error) -> Void]()
+        // both urls and closures in only one array of tuples
+        private var messages = [(url: URL, completionGet: (Error) -> Void )]()
+        
+        // calculated property: goes through the tuple`s array creating other array
+        var requestedURLs: [URL]{
+            return messages.map{$0.url}
+        }
         
         // add to an array to compare count order and value.
         // this is from the protocol
         func get(from url: URL, completionGet: @escaping(Error) -> Void) {
             
-            //spy the completions and url
-            //here the client capture the closure
-            // IT IS NOT CALLED it is just captured
-            completionsGet.append(completionGet)
-            requestedURLs.append(url)
+            //spy (capture) the closure and url. IT IS NOT CALLED just captured.
+            messages.append((url,completionGet))
             
         }
         // the called passed here to execute the closure later on demand instead of instantly
         // just convinient way to call the closure that was stored.
         func completeSpy(with error: Error, at index: Int = 0){
-            completionsGet[index](error)
+            messages[index].completionGet(error)
         }
     }
 }
