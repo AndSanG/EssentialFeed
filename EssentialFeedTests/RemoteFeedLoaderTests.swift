@@ -35,12 +35,8 @@ class RemoteFeedLoaderTests: XCTestCase {
         // clientSpyTD is a Test Double that we need.
         //MARK: ARRANGE
         let (sutRFL,clientSpyTD) = makeSUT()
-        // the Spy has a Stubbed error
-        // Stubb is an object with predefined behavior used to control the behavior of dependencies during a test.
-        // here is mixed spy capture with stub
-        // stub before call load that is not async
-        // spy just capture.
-        clientSpyTD.errorSpy = NSError(domain: "Test", code: 0)
+        // no stubbed error here anymore
+        
         //MARK: ACT
         // create a capturedError of FRL.error
         var capturedError = [RemoteFeedLoader.Error]()
@@ -58,8 +54,17 @@ class RemoteFeedLoaderTests: XCTestCase {
                             // now is only .connectivity
                             capturedError.append(error)
                         })
+        //this was moved from arrange to act
+        //when the client (get) complete with an error we want the load to complete with an error as well
+        let clientError = NSError(domain: "Test", code: 0)
+        //completion happens after invoking load
+        //call the completion with the error.
+        // the load called get but it was not executed just captured
+        //just now goes back, before the call hierarchy just reached get and stored the closure.
+        //here it is called, this changed the order. Before the loop was completed thats why the error needed to be stubbed.
         
-        print(capturedError)
+        clientSpyTD.completionsGet[0](clientError)
+        
         //MARK: ASSERT
         XCTAssertEqual(capturedError, [.connectivity])
     }
@@ -80,18 +85,20 @@ class RemoteFeedLoaderTests: XCTestCase {
     private class HTTPClientSpy: HTTPClient {
         // this properties are the captured values of a spy
         var requestedURLs = [URL]()
-        //set elsewhere at instantiation or later
-        var errorSpy: Error?
+        // move from stubbing to capture closures
+        // dont have behaviour just acumulate properties
+        var completionsGet = [(Error) -> Void]()
+        
         // add to an array to compare count order and value.
         // this is from the protocol
-        func get(from url: URL, completionGet: (any Error) -> Void) {
-            if let errorSpyUnwrapped = errorSpy {
-                print("get")
-                //call the completion with the error.
-                completionGet(errorSpyUnwrapped)
-            }
-            //spy the url
+        func get(from url: URL, completionGet: @escaping(Error) -> Void) {
+            
+            //spy the completions and url
+            //here the client capture the closure
+            // IT IS NOT CALLED it is just captured
+            completionsGet.append(completionGet)
             requestedURLs.append(url)
+            
         }
     }
 }
