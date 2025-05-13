@@ -29,14 +29,19 @@ class RemoteFeedLoaderTests: XCTestCase {
     }
     // When the client Fails we need to send an error.
     func test_load_deliversErrorOnClientError(){
-        
         print("test_load_deliversErrorOnClientError")
         //get a sutRFL and a clientSpyTD
         // sutRFL is the object of the test
         // clientSpyTD is a Test Double that we need.
+        //MARK: ARRANGE
         let (sutRFL,clientSpyTD) = makeSUT()
-        // the Spy has a mocked error
+        // the Spy has a Stubbed error
+        // Stubb is an object with predefined behavior used to control the behavior of dependencies during a test.
+        // here is mixed spy capture with stub
+        // stub before call load that is not async
+        // spy just capture.
         clientSpyTD.errorSpy = NSError(domain: "Test", code: 0)
+        //MARK: ACT
         // create a capturedError of FRL.error
         var capturedError = [RemoteFeedLoader.Error]()
         //this was preparation
@@ -55,6 +60,7 @@ class RemoteFeedLoaderTests: XCTestCase {
                         })
         
         print(capturedError)
+        //MARK: ASSERT
         XCTAssertEqual(capturedError, [.connectivity])
     }
     //MARK: - Helpers
