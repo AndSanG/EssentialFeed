@@ -63,7 +63,11 @@ class RemoteFeedLoaderTests: XCTestCase {
         //just now goes back, before the call hierarchy just reached get and stored the closure.
         //here it is called, this changed the order. Before the loop was completed thats why the error needed to be stubbed.
         
-        clientSpyTD.completionsGet[0](clientError)
+        // HERE THE CLIENT ANSWER more realistic. That`s the reason the error is here.
+        // This is executed after load but it can be more time simulating the http answer
+        
+        //move the array indexing to the Spy
+        clientSpyTD.completeSpy(with: clientError)
         
         //MARK: ASSERT
         XCTAssertEqual(capturedError, [.connectivity])
@@ -99,6 +103,11 @@ class RemoteFeedLoaderTests: XCTestCase {
             completionsGet.append(completionGet)
             requestedURLs.append(url)
             
+        }
+        // the called passed here to execute the closure later on demand instead of instantly
+        // just convinient way to call the closure that was stored.
+        func completeSpy(with error: Error, at index: Int = 0){
+            completionsGet[index](error)
         }
     }
 }
