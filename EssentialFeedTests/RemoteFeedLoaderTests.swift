@@ -26,20 +26,65 @@ class RemoteFeedLoaderTests: XCTestCase {
         sut.load()
         sut.load()
         XCTAssertEqual(client.requestedURLs,[url,url])
+    }
+    // When the client Fails we need to send an error.
+    func test_load_deliversErrorOnClientError(){
         
+        print("test_load_deliversErrorOnClientError")
+        //get a sutRFL and a clientSpyTD
+        // sutRFL is the object of the test
+        // clientSpyTD is a Test Double that we need.
+        let (sutRFL,clientSpyTD) = makeSUT()
+        // the Spy has a mocked error
+        clientSpyTD.errorSpy = NSError(domain: "Test", code: 0)
+        // create a capturedError of FRL.error
+        var capturedError: RemoteFeedLoader.Error?
+        //this was preparation
+        //when load is called delivers a connectivity error (DDD especifications)
+        //sutRFL.load{error in capturedError = error}
+        //longhand
+        sutRFL.load(completionLoad:
+                        {(error:RemoteFeedLoader.Error) -> Void in
+                            print("captured error")
+                            //this is executed in client get
+                            //.conectivity is called in load
+                            //.connectivity is the argument passed to this closure
+                            //assignt the error that was called with completion in load
+                            // now is only .connectivity
+                            capturedError = error
+                        })
+        
+        print(capturedError!)
+        XCTAssertEqual(capturedError, .connectivity)
     }
-    
     //MARK: - Helpers
-    
-    private func makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sut: RemoteFeedLoader, client: HTTPClientSpy) {
-        let client = HTTPClientSpy()
-        let sut = RemoteFeedLoader(url: url, client: client)
-        return (sut, client)
+    // create an instance of sut (RemoteFeedLoader) and a client (HTTPClientSpy)
+    private func makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sutRFL: RemoteFeedLoader, clientSpyTD: HTTPClientSpy) {
+        let clientSpyTD = HTTPClientSpy()
+        let sutRFL = RemoteFeedLoader(url: url, client: clientSpyTD)
+        return (sutRFL, clientSpyTD)
     }
+    
+    // RemoteFeedLoader interacts with an HTTP client, RFL needs a test double
+    // Test double is a pretend object used in place of a real object for testing purposes
+    // The client is an Spy captures and makes available parameter and state information, publishing
+    //     accessors to test code for private information allowing for more advanced state validation.
+    // Captures the URL of the instance, we can have the production client and the test client.
+    // Inject a client using Protocols instead of OOP
     private class HTTPClientSpy: HTTPClient {
+        // this properties are the captured values of a spy
         var requestedURLs = [URL]()
+        //set elsewhere at instantiation or later
+        var errorSpy: Error?
         // add to an array to compare count order and value.
-        func get(from url: URL) {
+        // this is from the protocol
+        func get(from url: URL, completionGet: (any Error) -> Void) {
+            if let errorSpyUnwrapped = errorSpy {
+                print("get")
+                //call the completion with the error.
+                completionGet(errorSpyUnwrapped)
+            }
+            //spy the url
             requestedURLs.append(url)
         }
     }
