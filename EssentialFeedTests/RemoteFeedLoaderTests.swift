@@ -38,9 +38,10 @@ class RemoteFeedLoaderTests: XCTestCase {
         // no stubbed error here anymore
         
         //MARK: ACT
+        
         // create a capturedError of FRL.error
         var capturedError = [RemoteFeedLoader.Error]()
-        //this was preparation
+        
         //when load is called delivers a connectivity error (DDD especifications)
         //sutRFL.load{error in capturedError = error}
         //longhand
@@ -48,8 +49,7 @@ class RemoteFeedLoaderTests: XCTestCase {
                         {(error:RemoteFeedLoader.Error) -> Void in
                         print("captured error: ", error)
                             //this is executed in client get
-                            //.conectivity is called in load
-                            //.connectivity is the argument passed to this closure
+                            //.conectivity is called in load, it is the argument passed to this closure
                             //assignt the error that was called with completion in load
                             // now is only .connectivity
                             capturedError.append(error)
@@ -59,7 +59,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         let clientError = NSError(domain: "Test", code: 0)
         //completion happens after invoking load
         //call the completion with the error.
-        // the load called get but it was not executed just captured
+        //the load called get but it was not executed just captured
         //just now goes back, before the call hierarchy just reached get and stored the closure.
         //here it is called, this changed the order. Before the loop was completed thats why the error needed to be stubbed.
         
@@ -87,9 +87,6 @@ class RemoteFeedLoaderTests: XCTestCase {
             XCTAssertEqual(capturedError, [.invalidData])
         }
         
-        
-        
-        
     }
     //MARK: - Helpers
     // create an instance of sut (RemoteFeedLoader) and a client (HTTPClientSpy)
@@ -102,12 +99,11 @@ class RemoteFeedLoaderTests: XCTestCase {
     // RemoteFeedLoader interacts with an HTTP client, RFL needs a test double
     // Test double is a pretend object used in place of a real object for testing purposes
     // The client is an Spy captures and makes available parameter and state information, publishing
-    //     accessors to test code for private information allowing for more advanced state validation.
+    // accessors to test code for private information allowing for more advanced state validation.
     // Captures the URL of the instance, we can have the production client and the test client.
     // Inject a client using Protocols instead of OOP
     private class HTTPClientSpy: HTTPClient {
-        // this properties are the captured values of a spy
-        // move from stubbing to capture closures
+        // this properties are the captured values of a spy used to capture closures
         // dont have behaviour just acumulate properties
         // both urls and closures in only one array of tuples
         private var messages = [(url: URL, completionGet: (HTTPClientResult) -> Void )]()

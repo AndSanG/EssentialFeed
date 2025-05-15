@@ -12,8 +12,7 @@ public enum HTTPClientResult {
 }
 
 public protocol HTTPClient{
-    //this function expect a url and a closure
-    //A closure is a self-contained block of code
+    //this function expect a url and a closure (self-contained block of code)
     func get(from url :URL, completionGet: @escaping (HTTPClientResult)->Void)
 }
 
@@ -29,12 +28,9 @@ public final class RemoteFeedLoader{
         self.client = client
         self.url = url
     }
+    
     public func load(completionLoad: @escaping (Error) -> Void ){
-        /*
-        client.get(from:url){ error in
-            completion(.connectivity)
-        }
-        */
+        
         client.get(from: url, completionGet: {result in
             print("load")
             //not passing down the error
