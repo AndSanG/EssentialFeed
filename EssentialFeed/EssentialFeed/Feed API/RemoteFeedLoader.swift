@@ -6,39 +6,42 @@
 //
 import Foundation
 
-public enum HTTPClientResult{
+public enum HTTPClientResult {
     case success(HTTPURLResponse)
     case failure(Error)
 }
 
 public protocol HTTPClient{
-    func get(from url :URL, completion: @escaping(HTTPClientResult) -> Void )
+    //this function expect a url and a closure (self-contained block of code)
+    func get(from url :URL, completionGet: @escaping (HTTPClientResult)->Void)
 }
 
 public final class RemoteFeedLoader{
     private let url: URL
     private let client: HTTPClient
     
-    public enum Error: Swift.Error {
+    public enum Error: Swift.Error{
         case connectivity
         case invalidData
     }
-    
     public init(url: URL, client: HTTPClient){
         self.client = client
         self.url = url
     }
     
-    public func load(completion: @escaping (Error) -> Void ){
+    public func load(completionLoad: @escaping (Error) -> Void ){
         
-        client.get(from:url){result in
+        client.get(from: url, completionGet: {result in
+            print("load")
+            //not passing down the error
+            //here maps http error to domain error
             switch result {
             case .success:
-                completion(.invalidData)
+                completionLoad(.invalidData)
             case .failure:
-                completion(.connectivity)
+                completionLoad(.connectivity)
             }
-        }
-        
+            
+        })
     }
 }
