@@ -9,7 +9,7 @@ import Foundation
 public protocol HTTPClient{
     //this function expect a url and a closure
     //A closure is a self-contained block of code
-    func get(from url :URL, completionGet: @escaping (Error)->Void)
+    func get(from url :URL, completionGet: @escaping (Error?, HTTPURLResponse?)->Void)
 }
 
 public final class RemoteFeedLoader{
@@ -18,6 +18,7 @@ public final class RemoteFeedLoader{
     
     public enum Error: Swift.Error{
         case connectivity
+        case invalidData
     }
     public init(url: URL, client: HTTPClient){
         self.client = client
@@ -29,12 +30,15 @@ public final class RemoteFeedLoader{
             completion(.connectivity)
         }
         */
-        client.get(from: url, completionGet: {error in
+        client.get(from: url, completionGet: {error, response in
             print("load")
-            print("error: ", error)
             //not passing down the error
             //here maps http error to domain error
-            completionLoad(.connectivity)
+            if response != nil {
+                completionLoad(.invalidData)
+            }else{
+                completionLoad(.connectivity)
+            }
         })
     }
 }

@@ -72,6 +72,21 @@ class RemoteFeedLoaderTests: XCTestCase {
         //MARK: ASSERT
         XCTAssertEqual(capturedError, [.connectivity])
     }
+    
+    func test_load_deliversErrorOnNon200HTTPResponse(){
+        //MARK: ARRANGE
+        let (sutRFL,clientSpyTD) = makeSUT()
+        
+        //MARK: ACT
+        var capturedError = [RemoteFeedLoader.Error]()
+        sutRFL.load(completionLoad: {error in capturedError.append(error)})
+        
+        clientSpyTD.completeSpy(withStatusCode: 400)
+        //MARK: ASSERT
+        XCTAssertEqual(capturedError, [.invalidData])
+        
+        
+    }
     //MARK: - Helpers
     // create an instance of sut (RemoteFeedLoader) and a client (HTTPClientSpy)
     private func makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sutRFL: RemoteFeedLoader, clientSpyTD: HTTPClientSpy) {
@@ -91,7 +106,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         // move from stubbing to capture closures
         // dont have behaviour just acumulate properties
         // both urls and closures in only one array of tuples
-        private var messages = [(url: URL, completionGet: (Error) -> Void )]()
+        private var messages = [(url: URL, completionGet: (Error?, HTTPURLResponse?) -> Void )]()
         
         // calculated property: goes through the tuple`s array creating other array
         var requestedURLs: [URL]{
@@ -100,7 +115,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         
         // add to an array to compare count order and value.
         // this is from the protocol
-        func get(from url: URL, completionGet: @escaping(Error) -> Void) {
+        func get(from url: URL, completionGet: @escaping(Error?, HTTPURLResponse?) -> Void) {
             
             //spy (capture) the closure and url. IT IS NOT CALLED just captured.
             messages.append((url,completionGet))
@@ -109,7 +124,17 @@ class RemoteFeedLoaderTests: XCTestCase {
         // the called passed here to execute the closure later on demand instead of instantly
         // just convinient way to call the closure that was stored.
         func completeSpy(with error: Error, at index: Int = 0){
-            messages[index].completionGet(error)
+            messages[index].completionGet(error, nil)
+        }
+        
+        func completeSpy(withStatusCode code : Int, at index: Int = 0 ){
+            let response = HTTPURLResponse(
+                url: requestedURLs[index],
+                statusCode: code,
+                httpVersion: nil,
+                headerFields: nil
+            )
+            messages[index].completionGet(nil, response)
         }
     }
 }
