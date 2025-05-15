@@ -6,10 +6,15 @@
 //
 import Foundation
 
+public enum HTTPClientResult {
+    case success(HTTPURLResponse)
+    case failure(Error)
+}
+
 public protocol HTTPClient{
     //this function expect a url and a closure
     //A closure is a self-contained block of code
-    func get(from url :URL, completionGet: @escaping (Error?, HTTPURLResponse?)->Void)
+    func get(from url :URL, completionGet: @escaping (HTTPClientResult)->Void)
 }
 
 public final class RemoteFeedLoader{
@@ -30,15 +35,17 @@ public final class RemoteFeedLoader{
             completion(.connectivity)
         }
         */
-        client.get(from: url, completionGet: {error, response in
+        client.get(from: url, completionGet: {result in
             print("load")
             //not passing down the error
             //here maps http error to domain error
-            if response != nil {
+            switch result {
+            case .success:
                 completionLoad(.invalidData)
-            }else{
+            case .failure:
                 completionLoad(.connectivity)
             }
+            
         })
     }
 }
