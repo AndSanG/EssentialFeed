@@ -196,7 +196,6 @@
 			isa = PBXGroup;
 			children = (
 				23FDEB1E2F058A60004D2CD0 /* Infrastructure */,
-				23FDEB072F02FCEC004D2CD0 /* CodableFeedStore.swift */,
 				23FDEB032F00D581004D2CD0 /* FeedCachePolicy.swift */,
 				23883FA62EFC51F600C80E74 /* FeedStore.swift */,
 				23883FA42EFC50C100C80E74 /* LocalFeedLoader.swift */,
@@ -269,6 +268,7 @@
 		23FDEB1E2F058A60004D2CD0 /* Infrastructure */ = {
 			isa = PBXGroup;
 			children = (
+				23FDEB202F058B5E004D2CD0 /* Codable */,
 				23FDEB1F2F058A75004D2CD0 /* CoreData */,
 			);
 			path = Infrastructure;
@@ -281,6 +281,14 @@
 				23FDEB192F0576F2004D2CD0 /* FeedStore.xcdatamodeld */,
 			);
 			path = CoreData;
+			sourceTree = "<group>";
+		};
+		23FDEB202F058B5E004D2CD0 /* Codable */ = {
+			isa = PBXGroup;
+			children = (
+				23FDEB072F02FCEC004D2CD0 /* CodableFeedStore.swift */,
+			);
+			path = Codable;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
