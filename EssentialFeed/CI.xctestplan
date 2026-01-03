@@ -27,6 +27,13 @@
         "identifier" : "23FBD0C52EF1BDE2005E9351",
         "name" : "EssentialFeedAPIEndToEndTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:EssentialFeed.xcodeproj",
+        "identifier" : "23FDEB2A2F083D06004D2CD0",
+        "name" : "EssentialFeedCacheIntegrationTests"
+      }
     }
   ],
   "version" : 1
