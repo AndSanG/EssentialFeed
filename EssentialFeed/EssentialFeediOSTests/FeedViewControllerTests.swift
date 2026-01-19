@@ -45,18 +45,14 @@ final class FeedViewControllerTests: XCTestCase {
     func test_viewAppearance_loadsFeed() {
         let (sut, loader) = makeSUT()
         
-        sut.loadViewIfNeeded()
-        sut.beginAppearanceTransition(true, animated: false) // viewWillAppear
-        sut.endAppearanceTransition() // viewIsAppearing + viewDidAppear
+        sut.simulateAppearance()
         
         XCTAssertEqual(loader.loadCallCount, 1)
     }
     
     func test_pullToRefresh_loadsFeed() {
         let (sut, loader) = makeSUT()
-        sut.loadViewIfNeeded()
-        sut.beginAppearanceTransition(true, animated: false)
-        sut.endAppearanceTransition()
+        sut.simulateAppearance()
 
         sut.refreshControl?.simulatePullToRefresh()
         XCTAssertEqual(loader.loadCallCount, 2)
@@ -83,6 +79,17 @@ final class FeedViewControllerTests: XCTestCase {
         }
     }
 
+}
+
+private extension FeedViewController{
+    func simulateAppearance() {
+        if !isViewLoaded {
+            loadViewIfNeeded()
+        }
+        
+        beginAppearanceTransition(true, animated: false)
+        endAppearanceTransition()
+    }
 }
 
 private extension UIRefreshControl {
