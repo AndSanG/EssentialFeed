@@ -31,9 +31,15 @@ extension NSPersistentContainer {
 }
 
 private extension NSManagedObjectModel {
+    static var modelCache = [String: NSManagedObjectModel]()
+
     static func with(name: String, in bundle: Bundle) -> NSManagedObjectModel? {
-        return bundle
+        let key = "\(bundle.bundleURL.absoluteString)_\(name)"
+        if let cached = modelCache[key] { return cached }
+        let model = bundle
             .url(forResource: name, withExtension: "momd")
             .flatMap { NSManagedObjectModel(contentsOf: $0) }
+        model.map { modelCache[key] = $0 }
+        return model
     }
 }
