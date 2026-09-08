@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import EssentialFeediOS
+@testable import EssentialFeediOS
 
 extension FeedViewController {
     func simulateAppearance() {
@@ -29,6 +29,7 @@ extension FeedViewController {
         }
         
         refreshControl = fakeRefreshControl
+        refreshController?.view = fakeRefreshControl
     }
     
     private class FakeUIRefreshControl: UIRefreshControl {
