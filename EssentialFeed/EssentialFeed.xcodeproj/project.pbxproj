@@ -332,13 +332,13 @@
 			path = Composers;
 			sourceTree = "<group>";
 		};
-		B5187D800FDE5C5A1281E01F /* Models */ = {
+		B5187D800FDE5C5A1281E01F /* Feed Presentation */ = {
 			isa = PBXGroup;
 			children = (
 				5B49CDA327501810A8C171EC /* FeedViewModel.swift */,
 				73360276A60B9B762DEA5ADB /* FeedImageViewModel.swift */,
 			);
-			path = Models;
+			path = "Feed Presentation";
 			sourceTree = "<group>";
 		};
 		234EE2942F23E0D800817225 /* Controllers */ = {
@@ -386,7 +386,6 @@
 				234EE2952F23E0E300817225 /* Views */,
 				234EE2942F23E0D800817225 /* Controllers */,
 				234EE2AA2F23ECB500817225 /* Composers */,
-				B5187D800FDE5C5A1281E01F /* Models */,
 			);
 			path = "Feed UI";
 			sourceTree = "<group>";
@@ -442,6 +441,7 @@
 				234EE2A22F23EBFA00817225 /* Feed Image Loader */,
 				23F5D6FA2F18345C00AC7D9F /* CI_iOS.xctestplan */,
 				234EE2A02F23EA1200817225 /* Feed UI */,
+				B5187D800FDE5C5A1281E01F /* Feed Presentation */,
 			);
 			path = EssentialFeediOS;
 			sourceTree = "<group>";
