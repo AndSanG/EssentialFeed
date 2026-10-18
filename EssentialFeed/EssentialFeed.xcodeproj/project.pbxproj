@@ -75,6 +75,7 @@
 		15F17693378915384B3D2D82 /* Feed.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B423051C772A77FFD4085EDD /* Feed.storyboard */; };
 		54DF80390DAEDC9270B25B47 /* Feed.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7226189634E2811C7CF939AE /* Feed.xcassets */; };
 		78D48F9A62FDE509F170DECA /* UITableView+Dequeueing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D14741A21A3EFBE45CDF221 /* UITableView+Dequeueing.swift */; };
+		A85BE9773A422BC5D0358DE2 /* UIImageView+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E3B74EC6A0EECCF0DE31A1 /* UIImageView+Animations.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -199,6 +200,7 @@
 		B423051C772A77FFD4085EDD /* Feed.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Feed.storyboard; sourceTree = "<group>"; };
 		7226189634E2811C7CF939AE /* Feed.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Feed.xcassets; sourceTree = "<group>"; };
 		2D14741A21A3EFBE45CDF221 /* UITableView+Dequeueing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Dequeueing.swift"; sourceTree = "<group>"; };
+		47E3B74EC6A0EECCF0DE31A1 /* UIImageView+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Animations.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -371,6 +373,7 @@
 				B423051C772A77FFD4085EDD /* Feed.storyboard */,
 				7226189634E2811C7CF939AE /* Feed.xcassets */,
 				2D14741A21A3EFBE45CDF221 /* UITableView+Dequeueing.swift */,
+				47E3B74EC6A0EECCF0DE31A1 /* UIImageView+Animations.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -855,6 +858,7 @@
 				2377132D2F1EC9D800D1122A /* FeedViewController.swift in Sources */,
 				234EE2712F1FE49200817225 /* FeedImageCell.swift in Sources */,
 				78D48F9A62FDE509F170DECA /* UITableView+Dequeueing.swift in Sources */,
+				A85BE9773A422BC5D0358DE2 /* UIImageView+Animations.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
